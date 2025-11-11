@@ -186,8 +186,14 @@ Isso criará um JAR em `target/aulajava-1.0-SNAPSHOT.jar`
 
 ### 5. Executar o JAR
 
+**Linux/macOS:**
 ```bash
 java -cp target/aulajava-1.0-SNAPSHOT.jar:target/dependency/* com.example.Main
+```
+
+**Windows:**
+```cmd
+java -jar target\aulajava-1.0-SNAPSHOT.jar
 ```
 
 Ou usando o plugin exec:
@@ -195,6 +201,21 @@ Ou usando o plugin exec:
 ```bash
 mvn exec:java
 ```
+
+### 6. Executar no Windows (Script Automatizado)
+
+Use o script `run-windows.bat` que automatiza todo o processo:
+
+```cmd
+run-windows.bat
+```
+
+Este script:
+- Limpa o projeto
+- Atualiza as dependências
+- Compila o projeto
+- Cria um JAR com todas as dependências
+- Executa a aplicação
 
 ## Como Usar
 
@@ -243,9 +264,104 @@ mvn clean
 rm pessoas.db
 ```
 
+## Troubleshooting
+
+### Erro: `NoClassDefFoundError: com/fasterxml/jackson/annotation/JsonKey` (Windows)
+
+Este erro pode ocorrer no Windows devido a problemas com o classpath do Maven ou cache corrompido. Siga estes passos:
+
+#### Solução 1: Limpar Cache do Maven
+
+```bash
+# Limpar cache local do Maven
+mvn dependency:purge-local-repository
+
+# Ou deletar manualmente o cache (Windows)
+# Pasta: C:\Users\<seu-usuario>\.m2\repository\com\fasterxml\jackson
+```
+
+#### Solução 2: Limpar e Recompilar
+
+```bash
+# Limpar projeto completamente
+mvn clean
+
+# Limpar cache e reinstalar dependências
+mvn clean install -U
+
+# Executar novamente
+mvn exec:java
+```
+
+#### Solução 3: Usar JAR com Dependências (Recomendado para Windows)
+
+```bash
+# Criar JAR com todas as dependências incluídas
+mvn clean package
+
+# Executar o JAR (Windows)
+java -jar target\aulajava-1.0-SNAPSHOT.jar
+```
+
+#### Solução 4: Verificar Versões das Dependências
+
+```bash
+# Verificar quais versões do Jackson estão sendo usadas
+mvn dependency:tree | findstr jackson
+
+# Deve mostrar todas as dependências na versão 2.15.2
+```
+
+#### Solução 5: Verificar Versão do Java
+
+```bash
+# Verificar versão do Java
+java -version
+
+# Deve ser Java 11 ou superior
+javac -version
+```
+
+#### Solução 6: Executar com Classpath Explícito (Windows)
+
+```cmd
+# Compilar
+mvn clean compile
+
+# Executar com classpath explícito
+java -cp "target/classes;target/dependency/*" com.example.Main
+```
+
+#### Diferenças entre Windows e Linux/macOS
+
+- **Separador de caminho**: Windows usa `;` enquanto Linux/macOS usa `:`
+- **Cache do Maven**: Pode estar corrompido no Windows
+- **Classpath**: O exec-maven-plugin pode ter problemas no Windows
+- **Variáveis de ambiente**: Podem estar configuradas incorretamente
+
+### Outros Problemas Comuns
+
+#### Erro: "mvn: command not found"
+
+- Verifique se o Maven está instalado: `mvn -version`
+- Verifique se o Maven está no PATH do sistema
+- No Windows, reinicie o terminal após instalar o Maven
+
+#### Erro: "java: command not found"
+
+- Verifique se o Java está instalado: `java -version`
+- Verifique se o Java está no PATH do sistema
+- Configure a variável `JAVA_HOME` no Windows
+
+#### Erro: "Cannot find or load main class"
+
+- Verifique se o projeto foi compilado: `mvn compile`
+- Verifique se a classe Main existe em `src/main/java/com/example/Main.java`
+
 ## Notas
 
 - O banco de dados é criado automaticamente na primeira execução
 - Cada pessoa recebe um ID único gerado automaticamente (UUID)
 - Os dados são persistidos no arquivo `pessoas.db` na raiz do projeto
+- **Windows**: Recomenda-se usar o JAR com dependências (`mvn package`) em vez de `mvn exec:java` para evitar problemas de classpath
 
