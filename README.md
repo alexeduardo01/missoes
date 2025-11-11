@@ -7,6 +7,133 @@ Projeto básico em Java usando Maven que persiste pessoas em um banco de dados N
 - Java 11 ou superior
 - Maven 3.6 ou superior
 
+## Instalação do Maven
+
+### macOS
+
+#### Opção 1: Usando Homebrew (Recomendado)
+
+```bash
+# Instalar Homebrew (se não tiver)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Instalar Maven
+brew install maven
+
+# Verificar instalação
+mvn -version
+```
+
+#### Opção 2: Instalação Manual
+
+1. Baixe o Maven do site oficial: https://maven.apache.org/download.cgi
+2. Extraia o arquivo em um diretório (ex: `/usr/local/apache-maven`)
+3. Configure as variáveis de ambiente no arquivo `~/.zshrc` ou `~/.bash_profile`:
+
+```bash
+export MAVEN_HOME=/usr/local/apache-maven
+export PATH=$MAVEN_HOME/bin:$PATH
+```
+
+4. Recarregue o terminal ou execute:
+```bash
+source ~/.zshrc  # ou source ~/.bash_profile
+```
+
+5. Verifique a instalação:
+```bash
+mvn -version
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Atualizar lista de pacotes
+sudo apt update
+
+# Instalar Maven
+sudo apt install maven
+
+# Verificar instalação
+mvn -version
+```
+
+### Linux (Fedora/RedHat/CentOS)
+
+```bash
+# Instalar Maven
+sudo dnf install maven
+# ou
+sudo yum install maven
+
+# Verificar instalação
+mvn -version
+```
+
+### Windows
+
+#### Opção 1: Usando Chocolatey
+
+```powershell
+# Instalar Chocolatey (se não tiver)
+# Execute no PowerShell como administrador:
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+# Instalar Maven
+choco install maven
+
+# Verificar instalação
+mvn -version
+```
+
+#### Opção 2: Instalação Manual
+
+1. Baixe o Maven do site oficial: https://maven.apache.org/download.cgi
+2. Extraia o arquivo em um diretório (ex: `C:\Program Files\Apache\maven`)
+3. Configure as variáveis de ambiente:
+   - Abra "Variáveis de Ambiente" no Painel de Controle
+   - Adicione `MAVEN_HOME` com o valor do diretório do Maven (ex: `C:\Program Files\Apache\maven`)
+   - Adicione `%MAVEN_HOME%\bin` à variável `PATH`
+4. Abra um novo terminal e verifique:
+```cmd
+mvn -version
+```
+
+### Verificar Instalação
+
+Após a instalação, execute o seguinte comando para verificar:
+
+```bash
+mvn -version
+```
+
+Você deve ver uma saída similar a:
+```
+Apache Maven 3.9.x
+Maven home: /usr/local/apache-maven
+Java version: 11.x.x, vendor: ...
+Java home: ...
+Default locale: ...
+OS name: "mac os x", version: "...", arch: "...", family: "mac"
+```
+
+### Instalação do Java
+
+Se você ainda não tiver o Java instalado:
+
+**macOS:**
+```bash
+brew install openjdk@11
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt install openjdk-11-jdk
+```
+
+**Windows:**
+Baixe e instale o JDK 11 do site da Oracle ou OpenJDK.
+
 ## Estrutura do Projeto
 
 ```
