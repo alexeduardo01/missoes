@@ -184,30 +184,47 @@ mvn clean compile
 mvn exec:java -Dexec.mainClass="com.example.Main"
 ```
 
-**Versão JavaFX (interface gráfica):**
+**OU (usando a classe padrão configurada no pom.xml):**
 ```bash
-mvn exec:java -Dexec.mainClass="com.example.MainFX"
+# Para Main.java
+mvn exec:java -Dexec.mainClass=com.example.Main
 ```
 
-**OU usar o módulo JavaFX explicitamente (recomendado):**
+**Versão JavaFX (interface gráfica) - RECOMENDADO:**
 ```bash
-# Linux/macOS
-mvn clean compile exec:java -Dexec.mainClass="com.example.MainFX" -Dexec.args="--module-path $(mvn dependency:build-classpath -Dmdep.outputFile=/dev/stdout -q):/usr/lib/jvm/javafx-sdk-17/lib --add-modules javafx.controls,javafx.fxml"
-
-# Windows
-mvn clean compile exec:java -Dexec.mainClass="com.example.MainFX"
+mvn exec:java -Dexec.mainClass=com.example.MainFX
 ```
+
+**OU (usando aspas, se necessário no Windows PowerShell):**
+```cmd
+mvn exec:java "-Dexec.mainClass=com.example.MainFX"
+```
+
+**Importante:** 
+- No **PowerShell (Windows)**, use aspas duplas: `mvn exec:java "-Dexec.mainClass=com.example.MainFX"`
+- No **CMD (Windows)**, não precisa de aspas: `mvn exec:java -Dexec.mainClass=com.example.MainFX`
+- No **Linux/macOS**, pode usar com ou sem aspas: `mvn exec:java -Dexec.mainClass=com.example.MainFX`
 
 ### 3. Compilar e executar em um único comando
 
 **Versão Console:**
 ```bash
-mvn clean compile exec:java -Dexec.mainClass="com.example.Main"
+mvn clean compile exec:java -Dexec.mainClass=com.example.Main
 ```
 
 **Versão JavaFX:**
 ```bash
-mvn clean compile exec:java -Dexec.mainClass="com.example.MainFX"
+mvn clean compile exec:java -Dexec.mainClass=com.example.MainFX
+```
+
+**Windows PowerShell:**
+```powershell
+mvn clean compile exec:java "-Dexec.mainClass=com.example.MainFX"
+```
+
+**Windows CMD:**
+```cmd
+mvn clean compile exec:java -Dexec.mainClass=com.example.MainFX
 ```
 
 ### 4. Gerar JAR executável
@@ -261,26 +278,48 @@ Ou usar o plugin exec:
 
 ```bash
 # Console
-mvn exec:java -Dexec.mainClass="com.example.Main"
+mvn exec:java -Dexec.mainClass=com.example.Main
 
 # JavaFX
-mvn exec:java -Dexec.mainClass="com.example.MainFX"
+mvn exec:java -Dexec.mainClass=com.example.MainFX
 ```
 
-### 6. Executar no Windows (Script Automatizado)
+**Windows PowerShell:**
+```powershell
+# Console
+mvn exec:java "-Dexec.mainClass=com.example.Main"
 
-Use o script `run-windows.bat` que automatiza todo o processo:
+# JavaFX --executar este
+mvn exec:java "-Dexec.mainClass=com.example.MainFX"
+```
 
+**Windows CMD:**
+```cmd
+# Console
+mvn exec:java -Dexec.mainClass=com.example.Main
+
+# JavaFX
+mvn exec:java -Dexec.mainClass=com.example.MainFX
+```
+
+### 6. Executar no Windows (Scripts Automatizados)
+
+**Para executar JavaFX diretamente:**
+```cmd
+run-javafx.bat
+```
+Este script compila e executa a aplicação JavaFX diretamente.
+
+**Para criar JAR e executar (alternativa recomendada):**
 ```cmd
 run-windows.bat
 ```
-
 Este script:
 - Limpa o projeto
 - Atualiza as dependências
 - Compila o projeto
 - Cria um JAR com todas as dependências
-- Executa a aplicação
+- Executa a aplicação JavaFX (via JAR)
 
 ## Como Usar
 
@@ -352,6 +391,29 @@ rm pessoas.db
 ```
 
 ## Troubleshooting
+
+### Erro: "Unknown lifecycle phase" ou "You must specify a valid lifecycle phase"
+
+**Erro comum:** `[ERROR] Unknown lifecycle phase ".mainClass=com.example.MainFX"`
+
+**Causa:** Comando Maven incorreto. Você provavelmente executou algo como:
+```bash
+mvn .mainClass=com.example.MainFX  # ❌ ERRADO
+```
+
+**Solução:** Use o comando correto:
+```bash
+# Linux/macOS/CMD (Windows)
+mvn exec:java -Dexec.mainClass=com.example.MainFX  # ✅ CORRETO
+
+# PowerShell (Windows)
+mvn exec:java "-Dexec.mainClass=com.example.MainFX"  # ✅ CORRETO
+```
+
+**Importante:** 
+- O comando correto é: `mvn exec:java -Dexec.mainClass=...`
+- Não use: `mvn .mainClass=...` ou `mvn -Dexec.mainClass=...` (sem `exec:java`)
+- No PowerShell, coloque a opção `-Dexec.mainClass=...` entre aspas duplas
 
 ### Erro: `NoClassDefFoundError: com/fasterxml/jackson/annotation/JsonKey` (Windows)
 
