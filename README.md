@@ -140,21 +140,34 @@ Baixe e instale o JDK 11 do site da Oracle ou OpenJDK.
 aulajava/
 ├── pom.xml
 ├── README.md
+├── run-windows.bat
+├── run.sh
 └── src/
     └── main/
         └── java/
             └── com/
                 └── example/
-                    ├── Person.java
-                    └── Main.java
+                    ├── Person.java          # Classe modelo de Pessoa
+                    ├── Main.java            # Aplicação console (linha de comando)
+                    ├── MainFX.java          # Aplicação JavaFX (interface gráfica)
+                    └── PersonService.java   # Serviço CRUD para gerenciar pessoas
 ```
 
 ## Funcionalidades
 
+### Versão Console (Main.java)
 - Adicionar pessoas ao banco de dados
 - Listar todas as pessoas cadastradas
 - Buscar pessoa por ID
 - Persistência em banco Nitrite (arquivo `pessoas.db`)
+
+### Versão JavaFX (MainFX.java) - Interface Gráfica
+- **CRUD Completo**: Criar, Ler, Atualizar e Deletar pessoas
+- **Interface Gráfica Moderna**: Tabela para visualizar pessoas
+- **Formulário Interativo**: Campos para cadastrar/editar pessoas
+- **Validação de Dados**: Validação de campos obrigatórios e formato
+- **Confirmação de Exclusão**: Diálogo de confirmação antes de excluir
+- **Atualização em Tempo Real**: Tabela atualizada automaticamente após operações
 
 ## Comandos para Executar o Projeto
 
@@ -166,14 +179,35 @@ mvn clean compile
 
 ### 2. Executar a aplicação
 
+**Versão Console (linha de comando):**
 ```bash
 mvn exec:java -Dexec.mainClass="com.example.Main"
 ```
 
+**Versão JavaFX (interface gráfica):**
+```bash
+mvn exec:java -Dexec.mainClass="com.example.MainFX"
+```
+
+**OU usar o módulo JavaFX explicitamente (recomendado):**
+```bash
+# Linux/macOS
+mvn clean compile exec:java -Dexec.mainClass="com.example.MainFX" -Dexec.args="--module-path $(mvn dependency:build-classpath -Dmdep.outputFile=/dev/stdout -q):/usr/lib/jvm/javafx-sdk-17/lib --add-modules javafx.controls,javafx.fxml"
+
+# Windows
+mvn clean compile exec:java -Dexec.mainClass="com.example.MainFX"
+```
+
 ### 3. Compilar e executar em um único comando
 
+**Versão Console:**
 ```bash
 mvn clean compile exec:java -Dexec.mainClass="com.example.Main"
+```
+
+**Versão JavaFX:**
+```bash
+mvn clean compile exec:java -Dexec.mainClass="com.example.MainFX"
 ```
 
 ### 4. Gerar JAR executável
@@ -186,6 +220,8 @@ Isso criará um JAR em `target/aulajava-1.0-SNAPSHOT.jar`
 
 ### 5. Executar o JAR
 
+**Versão Console (Main.java):**
+
 **Linux/macOS:**
 ```bash
 java -cp target/aulajava-1.0-SNAPSHOT.jar:target/dependency/* com.example.Main
@@ -193,13 +229,42 @@ java -cp target/aulajava-1.0-SNAPSHOT.jar:target/dependency/* com.example.Main
 
 **Windows:**
 ```cmd
+java -cp target\aulajava-1.0-SNAPSHOT.jar;target\dependency\* com.example.Main
+```
+
+**Versão JavaFX (MainFX.java) - Recomendado:**
+
+O JAR criado com `mvn package` usa `MainFX` como classe principal. Para executar:
+
+**Linux/macOS:**
+```bash
+java --module-path <caminho-javafx>/lib --add-modules javafx.controls,javafx.fxml -jar target/aulajava-1.0-SNAPSHOT.jar
+```
+
+**Windows:**
+```cmd
+java --module-path <caminho-javafx>\lib --add-modules javafx.controls,javafx.fxml -jar target\aulajava-1.0-SNAPSHOT.jar
+```
+
+**OU simplesmente (se JavaFX estiver no classpath):**
+```bash
+# Linux/macOS
+java -jar target/aulajava-1.0-SNAPSHOT.jar
+
+# Windows
 java -jar target\aulajava-1.0-SNAPSHOT.jar
 ```
 
-Ou usando o plugin exec:
+**Nota:** Se o JavaFX não estiver instalado no sistema, você pode baixá-lo em: https://openjfx.io/
+
+Ou usar o plugin exec:
 
 ```bash
-mvn exec:java
+# Console
+mvn exec:java -Dexec.mainClass="com.example.Main"
+
+# JavaFX
+mvn exec:java -Dexec.mainClass="com.example.MainFX"
 ```
 
 ### 6. Executar no Windows (Script Automatizado)
@@ -219,12 +284,33 @@ Este script:
 
 ## Como Usar
 
+### Versão Console (Main.java)
+
 1. Execute a aplicação usando um dos comandos acima
 2. Escolha uma opção no menu:
    - **1**: Adicionar uma nova pessoa (solicita nome, idade e email)
    - **2**: Listar todas as pessoas cadastradas
    - **3**: Buscar uma pessoa por ID
    - **4**: Sair da aplicação
+
+### Versão JavaFX (MainFX.java) - Interface Gráfica
+
+1. Execute a aplicação JavaFX usando um dos comandos acima
+2. A interface gráfica será aberta com:
+   - **Tabela superior**: Mostra todas as pessoas cadastradas
+   - **Formulário inferior**: Para cadastrar ou editar pessoas
+   - **Botões de ação**:
+     - **Novo**: Limpa o formulário para cadastrar nova pessoa
+     - **Salvar**: Salva a pessoa (cria nova ou atualiza existente)
+     - **Editar**: Habilita edição da pessoa selecionada na tabela
+     - **Excluir**: Remove a pessoa selecionada (com confirmação)
+     - **Cancelar**: Cancela a operação e limpa o formulário
+
+**Funcionalidades:**
+- Clique em uma pessoa na tabela para selecioná-la
+- Preencha o formulário e clique em "Salvar" para criar/atualizar
+- Validação automática de campos obrigatórios
+- Confirmação antes de excluir uma pessoa
 
 ## Banco de Dados
 
@@ -234,6 +320,7 @@ O banco de dados Nitrite é criado automaticamente como um arquivo local chamado
 
 - **Nitrite 3.4.4**: Banco de dados NoSQL embarcado
 - **Jackson 2.15.2**: Serialização JSON (usado pelo Nitrite)
+- **JavaFX 17.0.2**: Framework para interface gráfica (javafx-controls, javafx-fxml)
 
 ## Exemplo de Uso
 
